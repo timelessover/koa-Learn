@@ -1,29 +1,35 @@
 const router = require('koa-router')()
-import {Data} from '../db/model'
+import { Data } from '../db/model'
 import fs from 'fs-extra';
 import svgCaptcha from 'svg-captcha'
+import jwt from 'jsonwebtoken'
 
 router.prefix('/v1')
 
 router.get('/', async (ctx, next) => {
-//   const findData = await Data.find({ 'appkey': 'sss' })
-  ctx.body = 'findData'
+    //   const findData = await Data.find({ 'appkey': 'sss' })
+    ctx.body = 'findData'
 })
 
 router.post('/', async (ctx, next) => {
-  
-  try {
-    const req_data = ctx.request.body
-    console.log(req_data)
-    const data = new Data(req_data)
-    data.save().then(() => {
-        console.log('保存成功')
-      });
-    ctx.body = { errCode: 'save ok' }
-  }
-  catch (err) {
-    console.log(err)
-  }
+    console.log(ctx)
+    try {
+        let token = ctx.header.authorization
+
+        console.log(token)
+        let payload = jwt.verify(token.split(' ')[1], 'my_token');
+        ctx.body = payload
+        // const req_data = ctx.request.body
+        // console.log(req_data)
+        // const data = new Data(req_data)
+        // data.save().then(() => {
+        //     console.log('保存成功')
+        // });
+        // ctx.body = { errCode: 'save ok' }
+    }
+    catch (err) {
+        console.log(err)
+    }
 })
 // router.post('/code',async (ctx) => {
 //   var captcha = svgCaptcha.create({    //这种生成的是随机数验证码

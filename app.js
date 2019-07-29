@@ -6,7 +6,7 @@ import onerror from 'koa-onerror';
 import bodyparser from 'koa-bodyparser';
 import logger from 'koa-logger';
 import cors from 'koa2-cors';
-import jwt from 'koa-jwt'
+import koaJwt from 'koa-jwt'
 
 // import session from 'koa-session';
 
@@ -49,14 +49,14 @@ app.use((ctx, next) => {
   return next().catch((err) => {
     if (err.status === 401) {
       ctx.status = 401;
-      ctx.body = 'Protected resource, use Authorization header to get access\n';
+      ctx.body = {error: err.originalError ? err.originalError.message : err.message}
     } else {
       throw err;
     }
   })
 })
-app.use(jwt({
-  secret: 'my_token'
+app.use(koaJwt({
+  secret:'my_token'
 }).unless({
   path: [/\/register/, /\/login/],
 }))
