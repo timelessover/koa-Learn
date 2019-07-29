@@ -1,5 +1,5 @@
 const router = require('koa-router')()
-import User from '../db/model'
+import { User,Buy } from '../db/model'
 
 
 router.prefix('/register')
@@ -10,7 +10,6 @@ router.get('/', async (ctx, next) => {
 
 router.post('/', async (ctx, next) => {
   const users = ctx.request.body
-  console.log(users)
   if (users.username && users.password) {
     try {
       let _user = await User.findOne({ username: users.username })
@@ -19,7 +18,19 @@ router.post('/', async (ctx, next) => {
         return
       }
       const user = new User(users)
-      user.save().then(() => console.log('保存成功'));
+      console.log(user)
+      user.save().then(() => {
+        console.log('保存成功')
+        var story1 = new Buy({
+          user_id: user._id,
+          goods: ''    // assign the _id from the person
+        });
+        var story1 = new xxx({
+          user_id: user._id,
+          goods: ''    // assign the _id from the person
+        });
+        story1.save().then(()=>{console.log('关联成功')})
+      });
       ctx.body = { errCode: 'register ok' }
     } catch (e) {
       console.log(e)

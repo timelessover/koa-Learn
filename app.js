@@ -6,12 +6,14 @@ import onerror from 'koa-onerror';
 import bodyparser from 'koa-bodyparser';
 import logger from 'koa-logger';
 import cors from 'koa2-cors';
+import jwt from 'koa-jwt'
 
 // import session from 'koa-session';
 
 //routes
 import register from './routes/register'
 import login from './routes/login';
+import save from './routes/save';
 
 
 
@@ -32,7 +34,7 @@ import login from './routes/login';
 // app.use(ctx => {
 //   // ignore favicon
 //   if (ctx.path === '/favicon.ico') return;
- 
+
 //   let n = ctx.session.views || 0;
 //   ctx.session.views = ++n;
 //   ctx.body = n + ' views';
@@ -40,6 +42,24 @@ import login from './routes/login';
 
 // error handler
 onerror(app)
+
+
+//jwt
+app.use((ctx, next) => {
+  return next().catch((err) => {
+    if (err.status === 401) {
+      ctx.status = 401;
+      ctx.body = 'Protected resource, use Authorization header to get access\n';
+    } else {
+      throw err;
+    }
+  })
+})
+app.use(jwt({
+  secret: 'my_token'
+}).unless({
+  path: [/\/register/, /\/login/],
+}))
 
 // middlewares
 app.use(bodyparser({
@@ -90,6 +110,7 @@ app.use(async (ctx, next) => {
 // routes
 app.use(register.routes(), register.allowedMethods())
 app.use(login.routes(), login.allowedMethods())
+app.use(save.routes(), save.allowedMethods())
 
 // error-handling
 app.on('error', (err, ctx) => {
