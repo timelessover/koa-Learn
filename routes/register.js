@@ -18,7 +18,6 @@ router.post('/', async (ctx, next) => {
         return
       }
       const user = new User(users)
-      console.log(user)
       user.save().then(() => {
         console.log('保存成功')
         var story1 = new Buy({

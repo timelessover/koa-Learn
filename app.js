@@ -14,6 +14,7 @@ import koaJwt from 'koa-jwt'
 import register from './routes/register'
 import login from './routes/login';
 import save from './routes/save';
+import code from './routes/code';
 
 
 
@@ -58,7 +59,7 @@ app.use((ctx, next) => {
 app.use(koaJwt({
   secret:'my_token'
 }).unless({
-  path: [/\/register/, /\/login/],
+  path: [/\/register/, /\/login/,/\/code/],
 }))
 
 // middlewares
@@ -111,6 +112,7 @@ app.use(async (ctx, next) => {
 app.use(register.routes(), register.allowedMethods())
 app.use(login.routes(), login.allowedMethods())
 app.use(save.routes(), save.allowedMethods())
+app.use(code.routes(), code.allowedMethods())
 
 // error-handling
 app.on('error', (err, ctx) => {

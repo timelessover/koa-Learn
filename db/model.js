@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 //连接数据库
-mongoose.connect('mongodb://127.0.0.1:27017/?gssapiServiceName=mongodb')
+// mongoose.connect('mongodb://127.0.0.1:27017/?gssapiServiceName=mongodb')
 
 let Schema = mongoose.Schema
 // 账户的数据库模型

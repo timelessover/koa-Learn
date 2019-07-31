@@ -15,17 +15,9 @@ router.post('/', async (ctx, next) => {
     console.log(ctx)
     try {
         let token = ctx.header.authorization
-
         console.log(token)
         let payload = jwt.verify(token.split(' ')[1], 'my_token');
         ctx.body = payload
-        // const req_data = ctx.request.body
-        // console.log(req_data)
-        // const data = new Data(req_data)
-        // data.save().then(() => {
-        //     console.log('保存成功')
-        // });
-        // ctx.body = { errCode: 'save ok' }
     }
     catch (err) {
         console.log(err)
