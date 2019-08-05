@@ -1,12 +1,18 @@
 const router = require('koa-router')()
-import { User,Buy } from '../db/model'
+import { User } from '../db/model'
+
 
 
 router.prefix('/register')
 
-router.get('/', async (ctx, next) => {
-  ctx.body = 'koa2 string'
+router.get('/',async (ctx)=>{
+  // console.log(__dirname + 'views/index.html')
+  await ctx.render('index.html')
+ 
+  // ctx.sendFile(__dirname + 'views/index.html');
 })
+
+
 
 router.post('/', async (ctx, next) => {
   const users = ctx.request.body
@@ -39,6 +45,8 @@ router.post('/', async (ctx, next) => {
   }
 
 })
+
+
 
 
 

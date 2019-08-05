@@ -15,6 +15,7 @@ import register from './routes/register'
 import login from './routes/login';
 import save from './routes/save';
 import code from './routes/code';
+import index from './routes/index';
 
 
 
@@ -50,17 +51,17 @@ app.use((ctx, next) => {
   return next().catch((err) => {
     if (err.status === 401) {
       ctx.status = 401;
-      ctx.body = {error: err.originalError ? err.originalError.message : err.message}
-    } else {
-      throw err;
+      ctx.body = { error: err.originalError ? err.originalError.message : err.message }
     }
   })
 })
-app.use(koaJwt({
-  secret:'my_token'
-}).unless({
-  path: [/\/register/, /\/login/,/\/code/],
-}))
+
+
+// app.use(koaJwt({
+//   secret: 'my_token'
+// }).unless({
+//   path: [/\/register/, /\/login/, /\/code/, /\/index/],
+// }))
 
 // middlewares
 app.use(bodyparser({
@@ -70,6 +71,7 @@ app.use(json())
 app.use(logger())
 app.use(require('koa-static')(__dirname + '/public'))
 app.use(cors());
+
 
 
 // app.use( async ( ctx ) => {
@@ -95,7 +97,7 @@ app.use(cors());
 
 
 app.use(views(__dirname + '/views', {
-  extension: 'pug'
+  extension: 'pug,html'
 }))
 
 // logger
@@ -109,10 +111,10 @@ app.use(async (ctx, next) => {
 
 
 // routes
-app.use(register.routes(), register.allowedMethods())
-app.use(login.routes(), login.allowedMethods())
-app.use(save.routes(), save.allowedMethods())
-app.use(code.routes(), code.allowedMethods())
+const routesList = [register, login, save, code, index]
+routesList.map((route) => {
+  app.use(route.routes(), route.allowedMethods())
+})
 
 // error-handling
 app.on('error', (err, ctx) => {
